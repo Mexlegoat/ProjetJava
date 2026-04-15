@@ -1,6 +1,6 @@
-package test.java.tests;
+package tests;
 
-import main.java.modeles.TypeClass;
+import modeles.TypeClass;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 

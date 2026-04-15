@@ -1,6 +1,6 @@
-package main.java.patterns;
+package patterns;
 
-import main.java.modeles.User;
+import modeles.User;
 
 /**
  * Design Pattern : SINGLETON

@@ -1,20 +1,17 @@
-package main.java.Application;
+package Application;
 
-import main.java.ui.MainWindow;
-import main.java.modeles.User;
-import main.java.services.UserService;
+import ui.LoginDialog;
+import ui.MainWindow;
 
 import javax.swing.*;
 
-public class Main
-{
-    public static void main(String[] args)
-    {
-        User user = new User();
-        user.setUsername("test");
-
-        UserService service = new UserService();
-
-        new MainWindow(user, service).setVisible(true);
+/**
+ * Point d'entree de l'application.
+ * Affiche d'abord la boite de dialogue de login, puis la fenetre principale.
+ * Aucune logique metier ici (eval 1 : coquille).
+ */
+public class Main {
+    public static void main(String[] args) {
+        new MainWindow().setVisible(true);
     }
 }

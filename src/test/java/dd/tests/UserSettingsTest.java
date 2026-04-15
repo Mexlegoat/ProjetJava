@@ -1,8 +1,9 @@
-package test.java.tests;
+package tests;
 
-import main.java.modeles.UserSettings;
+import modeles.UserSettings;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class UserSettingsTest {

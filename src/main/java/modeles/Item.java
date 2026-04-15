@@ -1,8 +1,9 @@
-package main.java.modeles;
+package modeles;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public abstract class Item implements Serializable {
     public static int nextId = 1;
@@ -15,6 +16,11 @@ public abstract class Item implements Serializable {
     private TypeClass customType;
 
     public Item() {}
+
+    public Item(String nom, String chemin) {
+        this.nom    = nom;
+        this.chemin = chemin;
+    }
 
     public void initializeNewItem() {
         this.id = nextId++;
@@ -49,4 +55,13 @@ public abstract class Item implements Serializable {
 
     @Override
     public String toString() { return nom; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Item)) return false;
+        Item item = (Item) o;
+        return id == item.id && Objects.equals(nom, item.nom);
+    }
+
 }

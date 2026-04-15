@@ -1,9 +1,9 @@
-package main.java.services;
+package services;
 
-import main.java.DAO.UserDAO;
-import main.java.modeles.User;
-import main.java.patterns.UserSession;
-import main.java.utils.PasswordUtils;
+import DAO.UserDAO;
+import modeles.User;
+import patterns.UserSession;
+import utils.PasswordUtils;
 
 public class UserService
 {
