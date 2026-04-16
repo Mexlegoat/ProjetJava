@@ -2,15 +2,7 @@ package patterns;
 
 import modeles.User;
 
-/**
- * Design Pattern : SINGLETON
- * Stocke l'utilisateur connecté de façon unique et accessible partout
- * dans l'application, sans passer currentUser de classe en classe.
- *
- * Usage :
- *   UserSession.getInstance().setCurrentUser(user);
- *   User u = UserSession.getInstance().getCurrentUser();
- */
+
 public class UserSession
 {
 

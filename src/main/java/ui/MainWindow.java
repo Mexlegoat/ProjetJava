@@ -1,6 +1,7 @@
 package ui;
 
 import modeles.*;
+import patterns.UserSession;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -9,13 +10,27 @@ import java.time.format.DateTimeFormatter;
 
 public class MainWindow extends JFrame {
 
-    private JTextField        searchField;
+    private JMenu menuAffichage;
+    private JMenu menuAjouter;
+
+    private JMenuItem menuConnexion;
+    private JMenuItem menuInscription;
+    private JMenuItem menuDeconnexion;
+    private JMenuItem menuSauvegarde;
+
+    private JButton btnParametres;
+    private JButton btnAjouterJeu;
+    private JButton btnAjouterTravail;
+    private JButton btnAjouterMm;
+
+
+    private JTextField searchField;
     private JComboBox<String> filterCombo;
-    private JTable            dataGrid;
+    private JTable dataGrid;
     private DefaultTableModel tableModel;
-    private JList<Item>       listJeu;
-    private JList<Item>       listTravail;
-    private JList<Item>       listMm;
+    private JList<Item> listJeu;
+    private JList<Item> listTravail;
+    private JList<Item> listMm;
 
     private static final DateTimeFormatter FMT = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
@@ -26,27 +41,32 @@ public class MainWindow extends JFrame {
         setLocationRelativeTo(null);
         buildMenuBar();
         buildUI();
+        // updateUI();
     }
 
     private void buildMenuBar() {
         JMenuBar menuBar = new JMenuBar();
 
         JMenu menuFichier = new JMenu("Fichier");
-        menuFichier.add(new JMenuItem("Sauvegarder"));
+        menuSauvegarde = new JMenuItem("Sauvegarder");
+        menuFichier.add(menuSauvegarde);
         menuFichier.addSeparator();
         menuFichier.add(new JMenuItem("Quitter"));
 
-        JMenu menuAffichage = new JMenu("Affichage");
+        menuAffichage = new JMenu("Affichage");
         menuAffichage.add(new JCheckBoxMenuItem("Mode sombre"));
         
-        JMenu menuAjouter = new JMenu("Ajouter");
+        menuAjouter = new JMenu("Ajouter");
         menuAjouter.add(new JMenuItem("Type"));
 
         JMenu menuCompte = new JMenu("Compte");
-        menuCompte.add(new JMenuItem("Connexion"));
-        menuCompte.add(new JMenuItem("Inscription"));
+        menuConnexion = new JMenuItem("Connexion");
+        menuInscription = new JMenuItem("Inscription");
+        menuDeconnexion = new JMenuItem("Deconnexion");
+        menuCompte.add(menuConnexion);
+        menuCompte.add(menuInscription);
         menuCompte.addSeparator();
-        menuCompte.add(new JMenuItem("Deconnexion"));
+        menuCompte.add(menuDeconnexion);
 
 
         menuBar.add(menuFichier);
@@ -63,10 +83,10 @@ public class MainWindow extends JFrame {
         JPanel root = new JPanel(new BorderLayout(5, 5));
         root.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-        // NORD : logo + recherche + comboBox
+        // NORD : recherche
         JPanel topPanel = new JPanel(new BorderLayout(8, 0));
 
-        // Champ de recherche (JTextField) — sans listener
+        // Champ de recherche
         searchField = new JTextField();
         searchField.setToolTipText("Rechercher par nom...");
         JPanel searchPanel = new JPanel(new BorderLayout(4, 0));
@@ -78,14 +98,15 @@ public class MainWindow extends JFrame {
 
         // CENTRE : trois colonnes de listes
         JPanel center = new JPanel(new GridLayout(1, 3, 5, 0));
-        listJeu     = buildListColumn(center, "Jeux");
+        listJeu = buildListColumn(center, "Jeux");
         listTravail = buildListColumn(center, "Travail");
-        listMm      = buildListColumn(center, "Multimedia");
+        listMm = buildListColumn(center, "Multimedia");
         root.add(center, BorderLayout.CENTER);
 
         // SUD : boutons + JTable
         JPanel btnRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 4));
-        btnRow.add(new JButton("Parametres"));
+        btnParametres = new JButton("Paramètres");
+        btnRow.add(btnParametres);
 
         String[] cols = {"ID", "Nom", "Date d'ajout", "Type personnalise", "Chemin"};
         tableModel = new DefaultTableModel(cols, 0) {
@@ -120,11 +141,35 @@ public class MainWindow extends JFrame {
         col.add(new JScrollPane(list), BorderLayout.CENTER);
 
         JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        btnPanel.add(new JButton("+"));
+        JButton btnAdd = new JButton("+");
+        btnPanel.add(btnAdd);
         col.add(btnPanel, BorderLayout.SOUTH);
 
+        switch(titre)
+        {
+            case "Jeux": btnAjouterJeu = btnAdd;
+            case "Travail": btnAjouterTravail = btnAdd;
+            case "Multimedia": btnAjouterMm = btnAdd;
+        }
         parent.add(col);
         return list;
+    }
+    private void updateUI()
+    {
+        boolean loggedIn = UserSession.getInstance().isLoggedIn();
+
+        menuSauvegarde.setEnabled(loggedIn);
+        menuAffichage.setEnabled(loggedIn);
+        menuAjouter.setEnabled(loggedIn);
+
+        menuConnexion.setEnabled(!loggedIn);
+        menuInscription.setEnabled(!loggedIn);
+        menuDeconnexion.setEnabled(loggedIn);
+
+        btnAjouterMm.setEnabled(loggedIn);
+        btnParametres.setEnabled(loggedIn);
+        btnAjouterTravail.setEnabled(loggedIn);
+        btnAjouterJeu.setEnabled(loggedIn);
     }
 
 }

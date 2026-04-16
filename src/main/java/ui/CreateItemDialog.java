@@ -10,9 +10,9 @@ public class CreateItemDialog extends JDialog {
     protected JTextField extraField;
 
     // Donnees recuperables apres fermeture
-    private String  nom      = "";
-    private String  chemin   = "";
-    private String  extra    = "";
+    private String  nom = "";
+    private String  chemin = "";
+    private String  extra = "";
     private boolean confirmed = false;
 
     public CreateItemDialog(Frame owner, String categorie, String extraLabel) {

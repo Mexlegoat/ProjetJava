@@ -8,7 +8,6 @@ public class UserSettings implements Serializable {
     private boolean showType = false;
     private boolean showGenre = false;
     private boolean doubleClickToExecute = true;
-    private String defaultBrowsePath = "C:\\";
     private int searchType = 0; // 0=Name, 1=Type, 2=Genre
 
     public boolean isDarkMode() { return isDarkMode; }
@@ -19,8 +18,6 @@ public class UserSettings implements Serializable {
     public void setShowGenre(boolean b) { showGenre = b; }
     public boolean isDoubleClickToExecute() { return doubleClickToExecute; }
     public void setDoubleClickToExecute(boolean b) { doubleClickToExecute = b; }
-    public String getDefaultBrowsePath() { return defaultBrowsePath; }
-    public void setDefaultBrowsePath(String p) { defaultBrowsePath = p; }
     public int getSearchType() { return searchType; }
     public void setSearchType(int t) { searchType = t; }
 }

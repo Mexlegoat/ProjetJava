@@ -18,7 +18,7 @@ public abstract class Item implements Serializable {
     public Item() {}
 
     public Item(String nom, String chemin) {
-        this.nom    = nom;
+        this.nom = nom;
         this.chemin = chemin;
     }
 

@@ -15,9 +15,11 @@ public class JeuTest {
     }
 
     @Test
-    void setNom_stocke_correctement() {
+    void setNom_setPrix_stockent_correctement() {
         jeu.setNom("Minecraft");
+        jeu.setPrix(24);
         assertEquals("Minecraft", jeu.getNom());
+        assertEquals(24, jeu.getPrix());
     }
 
     @Test

@@ -2,6 +2,7 @@ package modeles;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class User implements Serializable {
     private String username;
@@ -20,4 +21,11 @@ public class User implements Serializable {
     public void setUserCreatedTypes(List<TypeClass> t) { userCreatedTypes = t; }
     public UserSettings getPreferences() { return preferences; }
     public void setPreferences(UserSettings s) { preferences = s; }
+
+    public boolean equals(User o)
+    {
+        if (this == o) return true;
+        if (o == null) return false;
+        return Objects.equals(this.getUsername(), o.getUsername()) && Objects.equals(this.getPassword(), o.getPassword());
+    }
 }

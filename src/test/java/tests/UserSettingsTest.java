@@ -47,15 +47,4 @@ public class UserSettingsTest {
         settings.setSearchType(2);
         assertEquals(2, settings.getSearchType());
     }
-
-    @Test
-    void defaultBrowsePath_est_C_par_defaut() {
-        assertEquals("C:\\", settings.getDefaultBrowsePath());
-    }
-
-    @Test
-    void setDefaultBrowsePath_stocke_correctement() {
-        settings.setDefaultBrowsePath("D:\\projets");
-        assertEquals("D:\\projets", settings.getDefaultBrowsePath());
-    }
 }

@@ -1,6 +1,7 @@
 package tests;
 
 import modeles.Categorie;
+import modeles.TypeClass;
 import modeles.User;
 import modeles.UserSettings;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,6 +42,18 @@ public class UserTest {
     }
 
     @Test
+    void userCreatedTypes_stocke_correctement()
+    {
+        java.util.List<TypeClass> types = new java.util.ArrayList<>();
+        TypeClass typ = new TypeClass();
+        typ.setNom("test");
+        types.add(typ);
+        user.setUserCreatedTypes(types);
+        assertEquals(1, user.getUserCreatedTypes().size());
+        assertEquals("test", user.getUserCreatedTypes().getFirst().getNom());
+    }
+
+    @Test
     void preferences_initialisees_par_defaut() {
         assertNotNull(user.getPreferences());
     }
@@ -53,7 +66,7 @@ public class UserTest {
         categories.add(cat);
         user.setCategories(categories);
         assertEquals(1, user.getCategories().size());
-        assertEquals("Jeux", user.getCategories().get(0).getNom());
+        assertEquals("Jeux", user.getCategories().getFirst().getNom());
     }
 
     @Test
@@ -62,5 +75,15 @@ public class UserTest {
         settings.setDarkMode(true);
         user.setPreferences(settings);
         assertTrue(user.getPreferences().isDarkMode());
+    }
+    @Test
+    void setUser_equals()
+    {
+        user.setPassword("ADMIN123");
+        user.setUsername("ADMIN");
+        User u = new User();
+        u.setUsername("ADMIN");
+        u.setPassword("ADMIN123");
+        assertTrue(user.equals(u));
     }
 }

@@ -6,13 +6,13 @@ import java.awt.*;
 
 public class LoginDialog extends JDialog {
 
-    private JTextField    usernameField;
+    private JTextField usernameField;
     private JPasswordField passwordField;
 
     // Donnees saisies recuperables apres fermeture
-    private String  saisieUsername = "";
-    private String  saisiePassword = "";
-    private boolean confirmed      = false;
+    private String saisieUsername = "";
+    private String saisiePassword = "";
+    private boolean confirmed = false;
 
     public LoginDialog(Frame owner) {
         super(owner, "Connexion", true);
@@ -27,7 +27,7 @@ public class LoginDialog extends JDialog {
         panel.setBorder(BorderFactory.createEmptyBorder(20, 25, 15, 25));
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(7, 5, 7, 5);
-        gbc.fill   = GridBagConstraints.HORIZONTAL;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
         // Titre
         JLabel title = new JLabel("StartApp - Connexion", SwingConstants.CENTER);
@@ -61,7 +61,6 @@ public class LoginDialog extends JDialog {
         setContentPane(panel);
     }
 
-    /** Affiche la boite et retourne true si l'utilisateur a confirme */
     public boolean showDialog() {
         setVisible(true);
         return confirmed;
@@ -70,11 +69,10 @@ public class LoginDialog extends JDialog {
     public String getSaisieUsername() { return saisieUsername; }
     public String getSaisiePassword() { return saisiePassword; }
 
-    /** Main de test autonome (sans JUnit) */
     public static void main(String[] args) {
         LoginDialog dlg = new LoginDialog(null);
         dlg.setVisible(true);
-        System.out.println("Username saisi : " + dlg.getSaisieUsername());
-        System.out.println("Password saisi : " + dlg.getSaisiePassword());
+        System.out.println("Username saisi : " + dlg.usernameField.getText());
+        System.out.println("Password saisi : " + dlg.passwordField.getText());
     }
 }

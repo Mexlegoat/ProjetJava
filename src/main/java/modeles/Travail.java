@@ -4,20 +4,20 @@ import java.util.Objects;
 
 public class Travail extends Item {
     private String langage;
-    private float avancement; // pourcentage d'avancement (0.0 à 100.0)
+    private float avancement;
 
     public Travail() {}
 
     public Travail(String nom, String chemin, String langage, float avancement) {
         super(nom, chemin);
-        this.langage     = langage;
-        this.avancement  = avancement;
+        this.langage = langage;
+        this.avancement = avancement;
     }
 
-    public String getLangage()              { return langage; }
-    public void setLangage(String l)        { this.langage = l; }
-    public float getAvancement()            { return avancement; }
-    public void setAvancement(float a)      { this.avancement = a; }
+    public String getLangage() { return langage; }
+    public void setLangage(String l) { this.langage = l; }
+    public float getAvancement() { return avancement; }
+    public void setAvancement(float a) { this.avancement = a; }
 
     @Override
     public boolean equals(Object o) {

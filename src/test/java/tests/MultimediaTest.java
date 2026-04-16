@@ -25,7 +25,12 @@ public class MultimediaTest {
         multimedia.setGenre("Action");
         assertEquals("Action", multimedia.getGenre());
     }
-
+    @Test
+    void setdureeheure_stocke_correctement()
+    {
+        multimedia.setDureeHeures(1.5F);
+        assertEquals(1.5F, multimedia.getDureeHeures());
+    }
     @Test
     void setChemin_stocke_correctement() {
         multimedia.setChemin("C:/videos/film.mp4");
