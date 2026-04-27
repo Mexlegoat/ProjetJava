@@ -1,22 +1,28 @@
 package ui;
 
+import controllers.AuthController;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+public class LoginDialog extends JDialog implements ActionListener {
 
-public class LoginDialog extends JDialog {
+    private final AuthController authController;
+    private JLabel labelErreur;
 
     private JTextField usernameField;
     private JPasswordField passwordField;
 
-    // Donnees saisies recuperables apres fermeture
-    private String saisieUsername = "";
-    private String saisiePassword = "";
+    private JButton Submit;
+    private JButton Cancel;
     private boolean confirmed = false;
 
-    public LoginDialog(Frame owner) {
+    public LoginDialog(Frame owner, AuthController authController) {
         super(owner, "Connexion", true);
-        setSize(360, 200);
+        this.authController = authController;
+        setSize(360, 220);
         setLocationRelativeTo(owner);
         setResizable(false);
         buildUI();
@@ -29,13 +35,11 @@ public class LoginDialog extends JDialog {
         gbc.insets = new Insets(7, 5, 7, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Titre
         JLabel title = new JLabel("StartApp - Connexion", SwingConstants.CENTER);
         title.setFont(new Font("Arial", Font.BOLD, 15));
         gbc.gridx = 0; gbc.gridy = 0; gbc.gridwidth = 2;
         panel.add(title, gbc);
 
-        // Nom d'utilisateur
         gbc.gridwidth = 1;
         gbc.gridx = 0; gbc.gridy = 1; gbc.weightx = 0.3;
         panel.add(new JLabel("Utilisateur :"), gbc);
@@ -43,20 +47,27 @@ public class LoginDialog extends JDialog {
         usernameField = new JTextField(15);
         panel.add(usernameField, gbc);
 
-        // Mot de passe
         gbc.gridx = 0; gbc.gridy = 2; gbc.weightx = 0.3;
         panel.add(new JLabel("Mot de passe :"), gbc);
         gbc.gridx = 1; gbc.weightx = 0.7;
         passwordField = new JPasswordField(15);
         panel.add(passwordField, gbc);
 
-        // Boutons — sans listeners (eval 1)
         JPanel btnRow = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
-        btnRow.add(new JButton("Annuler"));
-        btnRow.add(new JButton("Se connecter"));
+        Cancel = new JButton("Annuler");
+        Cancel.addActionListener(this);
+        btnRow.add(Cancel);
+        Submit = new JButton("Se connecter");
+        Submit.addActionListener(this);
+        btnRow.add(Submit);
 
         gbc.gridx = 0; gbc.gridy = 3; gbc.gridwidth = 2;
         panel.add(btnRow, gbc);
+
+        labelErreur = new JLabel("", SwingConstants.CENTER);
+        labelErreur.setForeground(Color.RED);
+        gbc.gridx = 0; gbc.gridy = 4; gbc.gridwidth = 2;
+        panel.add(labelErreur, gbc);
 
         setContentPane(panel);
     }
@@ -66,13 +77,22 @@ public class LoginDialog extends JDialog {
         return confirmed;
     }
 
-    public String getSaisieUsername() { return saisieUsername; }
-    public String getSaisiePassword() { return saisiePassword; }
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == Cancel) {
+            dispose();
+        } else if (e.getSource() == Submit) {
+            String username = usernameField.getText().trim();
+            String password = new String(passwordField.getPassword());
 
-    public static void main(String[] args) {
-        LoginDialog dlg = new LoginDialog(null);
-        dlg.setVisible(true);
-        System.out.println("Username saisi : " + dlg.usernameField.getText());
-        System.out.println("Password saisi : " + dlg.passwordField.getText());
+            // Délègue la logique au contrôleur
+            String erreur = authController.login(username, password);
+            if (erreur == null) {
+                confirmed = true;
+                dispose();
+            } else {
+                labelErreur.setText(erreur);
+            }
+        }
     }
 }

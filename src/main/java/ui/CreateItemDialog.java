@@ -2,12 +2,20 @@ package ui;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class CreateItemDialog extends JDialog {
+public class CreateItemDialog extends JDialog implements ActionListener {
 
     protected JTextField nomField;
     protected JTextField pathField;
     protected JTextField extraField;
+    protected JButton Confirm;
+    protected JButton Cancel;
+    protected JCheckBox Lancer;
+
+    private JPanel browseRow;
+    private JLabel labelChemin;
 
     // Donnees recuperables apres fermeture
     private String  nom = "";
@@ -44,23 +52,39 @@ public class CreateItemDialog extends JDialog {
         panel.add(extraField, gbc);
 
         // Chemin
-        gbc.gridx = 0; gbc.gridy = 2; gbc.weightx = 0.3;
-        panel.add(new JLabel("Chemin :"), gbc);
+        // Checkbox chemin
+        Lancer = new JCheckBox("Ajouter un chemin");
+        Lancer.addActionListener(this);
+        gbc.gridx = 0; gbc.gridy = 2; gbc.gridwidth = 2;
+        panel.add(Lancer, gbc);
+
+// Chemin
+        gbc.gridwidth = 1;
+        labelChemin = new JLabel("Chemin :");
+        gbc.gridx = 0; gbc.gridy = 3; gbc.weightx = 0.3;
+        panel.add(labelChemin, gbc);
         gbc.gridx = 1; gbc.weightx = 0.7;
         pathField = new JTextField(15);
         panel.add(pathField, gbc);
 
-        // Bouton Parcourir — sans listener
-        JPanel browseRow = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+        browseRow = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
         browseRow.add(new JButton("Parcourir..."));
-        gbc.gridx = 0; gbc.gridy = 3; gbc.gridwidth = 2;
+        gbc.gridx = 0; gbc.gridy = 4; gbc.gridwidth = 2;
         panel.add(browseRow, gbc);
+
+        labelChemin.setVisible(false);
+        pathField.setVisible(false);
+        browseRow.setVisible(false);
 
         // Boutons Confirmer / Annuler — sans listeners
         JPanel btnRow = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
-        btnRow.add(new JButton("Annuler"));
-        btnRow.add(new JButton("Confirmer"));
-        gbc.gridy = 4;
+        Cancel = new JButton("Annuler");
+        Cancel.addActionListener(this);
+        btnRow.add(Cancel);
+        Confirm = new JButton("Confirmer");
+        Confirm.addActionListener(this);
+        btnRow.add(Confirm);
+        gbc.gridy = 5;
         panel.add(btnRow, gbc);
 
         setContentPane(panel);
@@ -74,4 +98,43 @@ public class CreateItemDialog extends JDialog {
     public String getNom()    { return nom; }
     public String getChemin() { return chemin; }
     public String getExtra()  { return extra; }
+
+    @Override
+    public void actionPerformed(ActionEvent e)
+    {
+        if (e.getSource() == Cancel)
+        {
+            dispose();
+        }
+        else if (e.getSource() == Lancer)
+        {
+            boolean visible = Lancer.isSelected();
+            labelChemin.setVisible(visible);
+            pathField.setVisible(visible);
+            browseRow.setVisible(visible);
+            pack();
+        }
+        else if (e.getSource() == Confirm)
+        {
+            nom = nomField.getText().trim();
+            extra = extraField.getText().trim();
+
+            if (nom.isEmpty() || extra.isEmpty())
+            {
+                return;
+            }
+
+            if (Lancer.isSelected())
+            {
+                chemin = pathField.getText().trim();
+                if (chemin.isEmpty())
+                {
+                    return;
+                }
+            }
+
+            confirmed = true;
+            dispose();
+        }
+    }
 }

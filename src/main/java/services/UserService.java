@@ -17,14 +17,20 @@ public class UserService
 
     public boolean login(String username, String password)
     {
-        return userDAO.findByUsername(username)
-                .filter(u -> PasswordUtils.decrypt(u.getPassword()).equals(password))
-                .map(u ->
-                {
-                    UserSession.getInstance().setCurrentUser(u); // Singleton
-                    return true;
-                })
-                .orElse(false);
+            User user = userDAO.findByUsername(username).orElse(null);
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            if (!PasswordUtils.decrypt(user.getPassword()).equals(password))
+            {
+                return false;
+            }
+
+            UserSession.getInstance().setCurrentUser(user);
+            return true;
     }
 
     public boolean register(String username, String password)
@@ -36,7 +42,10 @@ public class UserService
         if (inserted) UserSession.getInstance().setCurrentUser(newUser); // Singleton
         return inserted;
     }
-
+    public boolean userExisting(String username)
+    {
+        return userDAO.existsByUsername(username);
+    }
     public void save()
     {
         User current = UserSession.getInstance().getCurrentUser();

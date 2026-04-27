@@ -1,0 +1,48 @@
+package controllers;
+
+import services.UserService;
+
+public class AuthController {
+
+    private final UserService userService;
+
+    public AuthController(UserService userService) {
+        this.userService = userService;
+    }
+
+    public String login(String username, String password) {
+        if (username == null || username.isEmpty() || password == null || password.isEmpty()) {
+            return "Veuillez remplir tous les champs.";
+        }
+        if (!userService.login(username, password)) {
+            return "Nom d'utilisateur ou mot de passe incorrect.";
+        }
+        return null; // succès
+    }
+
+    public String register(String username, String password, String confirmPassword) {
+        if (username == null || username.isEmpty()
+                || password == null || password.isEmpty()
+                || confirmPassword == null || confirmPassword.isEmpty()) {
+            return "Veuillez remplir tous les champs.";
+        }
+        if (!password.equals(confirmPassword)) {
+            return "Les mots de passe ne correspondent pas.";
+        }
+        if (userService.userExisting(username)) {
+            return "Cet utilisateur existe déjà.";
+        }
+        if (!userService.register(username, password)) {
+            return "Erreur lors de l'inscription.";
+        }
+        return null; // succès
+    }
+
+    public void logout() {
+        userService.logout();
+    }
+
+    public boolean isLoggedIn() {
+        return userService.getCurrentUser() != null;
+    }
+}
