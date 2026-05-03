@@ -7,10 +7,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-/**
- * Vue MVC : affichage du formulaire d'inscription.
- * Toute la logique de validation et d'enregistrement est déléguée à AuthController.
- */
 public class RegisterDialog extends JDialog implements ActionListener {
 
     private final AuthController authController;
@@ -96,10 +92,10 @@ public class RegisterDialog extends JDialog implements ActionListener {
             String password = new String(passwordField.getPassword());
             String confirmPassword = new String(confirmField.getPassword());
 
-            // Délègue la logique au contrôleur
             String erreur = authController.register(username, password, confirmPassword);
             if (erreur == null) {
                 confirmed = true;
+                JOptionPane.showMessageDialog(this, "Vous êtes inscrit!");
                 dispose();
             } else {
                 labelErreur.setText(erreur);

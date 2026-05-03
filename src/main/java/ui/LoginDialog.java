@@ -89,6 +89,7 @@ public class LoginDialog extends JDialog implements ActionListener {
             String erreur = authController.login(username, password);
             if (erreur == null) {
                 confirmed = true;
+                JOptionPane.showMessageDialog(this, "Vous êtes connecté!");
                 dispose();
             } else {
                 labelErreur.setText(erreur);

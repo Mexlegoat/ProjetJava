@@ -121,6 +121,7 @@ public class CreateItemDialog extends JDialog implements ActionListener {
 
             if (nom.isEmpty() || extra.isEmpty())
             {
+                JOptionPane.showMessageDialog(this, "Veuillez remplir les champs nécéssaires.");
                 return;
             }
 
@@ -129,6 +130,7 @@ public class CreateItemDialog extends JDialog implements ActionListener {
                 chemin = pathField.getText().trim();
                 if (chemin.isEmpty())
                 {
+                    JOptionPane.showMessageDialog(this, "Veuillez remplir le champ: chemin");
                     return;
                 }
             }

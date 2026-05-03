@@ -3,21 +3,38 @@ package controllers;
 import modeles.UserSettings;
 import services.UserService;
 
-public class SettingsController {
+import java.util.ArrayList;
+import java.util.List;
+
+public class SettingsController
+{
+    public interface SettingsListener
+    {
+        void onSettingsChanged(UserSettings settings);
+    }
 
     private final UserService userService;
+    private final List<SettingsListener> listeners = new ArrayList<>();
 
-    public SettingsController(UserService userService) {
+    public SettingsController(UserService userService)
+    {
         this.userService = userService;
     }
 
-    public UserSettings getSettings() {
+    public void addListener(SettingsListener listener)
+    {
+        listeners.add(listener);
+    }
+
+    public UserSettings getSettings()
+    {
         if (userService.getCurrentUser() == null) return new UserSettings();
         return userService.getCurrentUser().getPreferences();
     }
 
     public void saveSettings(boolean darkMode, boolean showType, boolean showGenre,
-                              boolean doubleClickToExecute, int searchType) {
+                             boolean doubleClickToExecute, int searchType)
+    {
         if (userService.getCurrentUser() == null) return;
 
         UserSettings prefs = userService.getCurrentUser().getPreferences();
@@ -28,5 +45,10 @@ public class SettingsController {
         prefs.setSearchType(searchType);
 
         userService.save();
+
+        for (SettingsListener listener : listeners)
+        {
+            listener.onSettingsChanged(prefs);
+        }
     }
 }

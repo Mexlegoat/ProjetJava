@@ -12,12 +12,13 @@ import java.awt.event.ActionListener;
  * Vue MVC : affichage des paramètres utilisateur.
  * La lecture et la sauvegarde des préférences sont déléguées à SettingsController.
  */
-public class SettingsDialog {
+public class SettingsDialog implements ActionListener {
 
     private final JDialog dialog;
     private final SettingsController settingsController;
     private boolean confirmed = false;
 
+    private JButton cancelBtn, saveBtn;
     private JRadioButton radioDark, radioLight;
     private JCheckBox checkShowType, checkShowGenre;
     private JRadioButton radioExecOn, radioExecOff;
@@ -91,26 +92,11 @@ public class SettingsDialog {
         // Boutons
         panel.add(Box.createVerticalStrut(15));
         JPanel btnRow = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        JButton cancelBtn = new JButton("Annuler");
-        JButton saveBtn = new JButton("Enregistrer");
+        cancelBtn = new JButton("Annuler");
+        saveBtn = new JButton("Enregistrer");
 
-        cancelBtn.addActionListener(e -> dialog.dispose());
-        saveBtn.addActionListener(e -> {
-            // Collecte les données de la View et délègue au contrôleur
-            int searchType = 0;
-            if (radioType.isSelected()) searchType = 1;
-            else if (radioGenre.isSelected()) searchType = 2;
-
-            settingsController.saveSettings(
-                    radioDark.isSelected(),
-                    checkShowType.isSelected(),
-                    checkShowGenre.isSelected(),
-                    radioExecOn.isSelected(),
-                    searchType
-            );
-            confirmed = true;
-            dialog.dispose();
-        });
+        cancelBtn.addActionListener(this);
+        saveBtn.addActionListener(this);
 
         btnRow.add(cancelBtn);
         btnRow.add(saveBtn);
@@ -119,9 +105,6 @@ public class SettingsDialog {
         dialog.setContentPane(new JScrollPane(panel));
     }
 
-    /**
-     * Initialise les widgets avec les valeurs courantes fournies par le contrôleur.
-     */
     private void loadSettings() {
         UserSettings prefs = settingsController.getSettings();
         if (prefs.isDarkMode()) radioDark.setSelected(true);
@@ -149,5 +132,31 @@ public class SettingsDialog {
     public boolean showDialog() {
         dialog.setVisible(true);
         return confirmed;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == cancelBtn)
+        {
+            dialog.dispose();
+        }
+        else if (e.getSource() == saveBtn)
+        {
+            int searchType = 0;
+            if (radioType.isSelected())
+                searchType = 1;
+            else if (radioGenre.isSelected())
+                searchType = 2;
+
+            settingsController.saveSettings(
+                    radioDark.isSelected(),
+                    checkShowType.isSelected(),
+                    checkShowGenre.isSelected(),
+                    radioExecOn.isSelected(),
+                    searchType
+            );
+            confirmed = true;
+            dialog.dispose();
+        }
     }
 }

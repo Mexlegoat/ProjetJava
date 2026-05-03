@@ -27,7 +27,6 @@ public class MainController
         j.initializeNewItem();
 
         addToCategory("Jeux", j);
-        userService.save();
         return j;
     }
 
@@ -43,7 +42,6 @@ public class MainController
         t.initializeNewItem();
 
         addToCategory("Travail", t);
-        userService.save();
         return t;
     }
 
@@ -59,7 +57,6 @@ public class MainController
         m.initializeNewItem();
 
         addToCategory("Multimedia", m);
-        userService.save();
         return m;
     }
 

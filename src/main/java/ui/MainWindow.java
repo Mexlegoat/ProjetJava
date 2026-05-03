@@ -5,10 +5,12 @@ import controllers.SettingsController;
 import modeles.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.format.DateTimeFormatter;
+
 public class MainWindow extends JFrame implements ActionListener
 {
     private final MainController mainController;
@@ -18,7 +20,6 @@ public class MainWindow extends JFrame implements ActionListener
     private JMenu menuAjouter;
     private JMenuItem menuQuitter;
     private JMenuItem menuType;
-    private JCheckBoxMenuItem menuModeSombre;
     private JMenuItem menuConnexion;
     private JMenuItem menuInscription;
     private JMenuItem menuDeconnexion;
@@ -35,6 +36,8 @@ public class MainWindow extends JFrame implements ActionListener
     private JList<Item> listTravail;
     private JList<Item> listMm;
     private static final DateTimeFormatter FMT = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+    private ItemCellRenderer itemCellRenderer;
+
     public MainWindow(MainController mainController,
                       AuthController authController,
                       SettingsController settingsController)
@@ -49,7 +52,14 @@ public class MainWindow extends JFrame implements ActionListener
         buildMenuBar();
         buildUI();
         refreshMenuState();
+        settingsController.addListener(settings ->
+        {
+            applyTheme(settings.isDarkMode());
+            showType(settings.isShowType());
+            showGenre(settings.isShowGenre());
+        });
     }
+
     private void buildMenuBar()
     {
         JMenuBar menuBar = new JMenuBar();
@@ -65,10 +75,6 @@ public class MainWindow extends JFrame implements ActionListener
         menuDate = new JMenuItem("Format de la date");
         menuDate.addActionListener(this);
         menuAffichage.add(menuDate);
-        menuAffichage.addSeparator();
-        menuModeSombre = new JCheckBoxMenuItem("Mode sombre");
-        menuModeSombre.addActionListener(this);
-        menuAffichage.add(menuModeSombre);
         menuAjouter = new JMenu("Ajouter");
         menuType = new JMenuItem("Type");
         menuType.addActionListener(this);
@@ -90,6 +96,7 @@ public class MainWindow extends JFrame implements ActionListener
         menuBar.add(menuAjouter);
         setJMenuBar(menuBar);
     }
+
     private void buildUI()
     {
         JPanel root = new JPanel(new BorderLayout(5, 5));
@@ -102,6 +109,7 @@ public class MainWindow extends JFrame implements ActionListener
         searchPanel.add(searchField, BorderLayout.CENTER);
         topPanel.add(searchPanel, BorderLayout.CENTER);
         root.add(topPanel, BorderLayout.NORTH);
+        itemCellRenderer = new ItemCellRenderer(false, false, false);
         JPanel center = new JPanel(new GridLayout(1, 3, 5, 0));
         listJeu = buildListColumn(center, "Jeux");
         listTravail = buildListColumn(center, "Travail");
@@ -118,6 +126,9 @@ public class MainWindow extends JFrame implements ActionListener
             public boolean isCellEditable(int r, int c) { return false; }
         };
         dataGrid = new JTable(tableModel);
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(tableModel);
+        dataGrid.setRowSorter(sorter);
+        sorter.setSortKeys(java.util.List.of(new RowSorter.SortKey(0, SortOrder.ASCENDING)));
         dataGrid.getColumnModel().getColumn(0).setPreferredWidth(40);
         dataGrid.getColumnModel().getColumn(1).setPreferredWidth(130);
         dataGrid.getColumnModel().getColumn(2).setPreferredWidth(140);
@@ -131,6 +142,7 @@ public class MainWindow extends JFrame implements ActionListener
         root.add(southStack, BorderLayout.SOUTH);
         setContentPane(root);
     }
+
     private JList<Item> buildListColumn(JPanel parent, String titre)
     {
         JPanel col = new JPanel(new BorderLayout());
@@ -160,6 +172,7 @@ public class MainWindow extends JFrame implements ActionListener
         parent.add(col);
         return list;
     }
+
     private void refreshMenuState()
     {
         boolean loggedIn = authController.isLoggedIn();
@@ -174,7 +187,8 @@ public class MainWindow extends JFrame implements ActionListener
         btnAjouterTravail.setEnabled(loggedIn);
         btnAjouterJeu.setEnabled(loggedIn);
     }
-    private void refreshAllViews()
+
+    private void refreshAllLists()
     {
         ((DefaultListModel<Item>) listJeu.getModel()).clear();
         ((DefaultListModel<Item>) listTravail.getModel()).clear();
@@ -194,13 +208,214 @@ public class MainWindow extends JFrame implements ActionListener
         tableModel.setRowCount(0);
         for (Item item : mainController.getAllItems())
         {
-            String date = item.getDateAjoute() != null ? item.getDateAjoute().format(FMT) : "";
-            String type = item.getCustomType() != null ? item.getCustomType().getNom() : "";
+            String date;
+            if (item.getDateAjoute() != null)
+            {
+                date = item.getDateAjoute().format(FMT);
+            }
+            else
+            {
+                date = "";
+            }
+            String type;
+            if (item.getCustomType() != null)
+            {
+                type = item.getCustomType().getNom();
+            }
+            else
+            {
+                type = "";
+            }
             tableModel.addRow(new Object[]{
                     item.getId(), item.getNom(), date, type, item.getChemin()
             });
         }
     }
+
+    private void applyTheme(boolean darkMode)
+    {
+        try
+        {
+            if (darkMode)
+            {
+                UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+                UIManager.put("control", new Color(45, 45, 45));
+                UIManager.put("info", new Color(45, 45, 45));
+                UIManager.put("nimbusBase", new Color(18, 30, 49));
+                UIManager.put("nimbusBlueGrey", new Color(45, 45, 45));
+                UIManager.put("nimbusLightBackground", new Color(70, 70, 70));
+                UIManager.put("nimbusSelectedText", Color.WHITE);
+                UIManager.put("nimbusDisabledText", Color.GRAY);
+                UIManager.put("text", Color.WHITE);
+                UIManager.put("Label.foreground", Color.WHITE);
+                UIManager.put("CheckBox.foreground", Color.WHITE);
+                UIManager.put("RadioButton.foreground", Color.WHITE);
+                UIManager.put("TitledBorder.titleColor", Color.WHITE);
+                UIManager.put("Menu.foreground", Color.WHITE);
+                UIManager.put("Menu.background", new Color(45, 45, 45));
+                UIManager.put("MenuItem.foreground", Color.WHITE);
+                UIManager.put("MenuItem.background", new Color(45, 45, 45));
+                UIManager.put("MenuBar.foreground", Color.WHITE);
+                UIManager.put("MenuBar.background", new Color(45, 45, 45));
+                UIManager.put("PopupMenu.background", new Color(45, 45, 45));
+                UIManager.put("Menu[Enabled].textForeground", Color.WHITE);
+                UIManager.put("MenuItem[Enabled].textForeground", Color.WHITE);
+                UIManager.put("Menu[Selected].textForeground", Color.WHITE);
+                UIManager.put("MenuItem[Selected].textForeground", Color.WHITE);
+            }
+            else
+            {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                UIManager.put("control", null);
+                UIManager.put("text", Color.BLACK);
+                UIManager.put("Label.foreground", Color.BLACK);
+                UIManager.put("CheckBox.foreground", Color.BLACK);
+                UIManager.put("RadioButton.foreground", Color.BLACK);
+            }
+            for (Window window : Window.getWindows())
+            {
+                SwingUtilities.updateComponentTreeUI(window);
+                window.repaint();
+            }
+            itemCellRenderer.setDarkMode(darkMode);
+            refreshCellRenderer();
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+    }
+
+    private void showType(boolean show)
+    {
+        itemCellRenderer.setShowType(show);
+        refreshCellRenderer();
+    }
+
+    private void showGenre(boolean show)
+    {
+        itemCellRenderer.setShowGenre(show);
+        refreshCellRenderer();
+    }
+
+    private void refreshCellRenderer()
+    {
+        listJeu.setCellRenderer(null);
+        listJeu.setCellRenderer(itemCellRenderer);
+        listTravail.setCellRenderer(null);
+        listTravail.setCellRenderer(itemCellRenderer);
+        listMm.setCellRenderer(null);
+        listMm.setCellRenderer(itemCellRenderer);
+    }
+
+    private static class ItemCellRenderer extends JPanel implements ListCellRenderer<Item>
+    {
+        private final JLabel labelNom = new JLabel();
+        private final JLabel labelType = new JLabel();
+        private final JLabel labelGenre = new JLabel();
+        private boolean showType;
+        private boolean showGenre;
+        private boolean darkMode;
+
+        public ItemCellRenderer(boolean showType, boolean showGenre, boolean darkMode)
+        {
+            this.showType = showType;
+            this.showGenre = showGenre;
+            this.darkMode = darkMode;
+            setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+            setBorder(BorderFactory.createEmptyBorder(3, 5, 3, 5));
+            setFocusable(false);
+            labelNom.setFocusable(false);
+            labelType.setFocusable(false);
+            labelGenre.setFocusable(false);
+            labelType.setFont(labelType.getFont().deriveFont(Font.PLAIN, 10f));
+            labelGenre.setFont(labelGenre.getFont().deriveFont(Font.PLAIN, 10f));
+            add(labelNom);
+            add(labelType);
+            add(labelGenre);
+        }
+
+        public void setShowType(boolean showType)
+        {
+            this.showType = showType;
+        }
+
+        public void setShowGenre(boolean showGenre)
+        {
+            this.showGenre = showGenre;
+        }
+
+        public void setDarkMode(boolean darkMode)
+        {
+            this.darkMode = darkMode;
+        }
+
+        @Override
+        public Component getListCellRendererComponent(JList<? extends Item> list,
+                                                      Item item, int index, boolean isSelected, boolean cellHasFocus)
+        {
+            labelNom.setText(item.getNom());
+            labelType.setVisible(showType);
+            if (showType)
+            {
+                if (item.getCustomType() != null)
+                {
+                    labelType.setText("Type : " + item.getCustomType().getNom());
+                }
+                else
+                {
+                    labelType.setText("Type : -");
+                }
+            }
+            labelGenre.setVisible(showGenre);
+            if (showGenre)
+            {
+                if (item instanceof Jeu)
+                {
+                    labelGenre.setText("Genre : " + ((Jeu) item).getGenre());
+                }
+                else if (item instanceof Multimedia)
+                {
+                    labelGenre.setText("Genre : " + ((Multimedia) item).getGenre());
+                }
+                else if (item instanceof Travail)
+                {
+                    labelGenre.setText("Langage : " + ((Travail) item).getLangage());
+                }
+                else
+                {
+                    labelGenre.setText("");
+                }
+            }
+            if (isSelected)
+            {
+                setOpaque(true);
+                if (darkMode)
+                {
+                    setBackground(new Color(100, 100, 120));
+                }
+                else
+                {
+                    setBackground(new Color(70, 70, 70));
+                }
+                labelNom.setForeground(Color.WHITE);
+                labelType.setForeground(Color.WHITE);
+                labelGenre.setForeground(Color.WHITE);
+            }
+            else
+            {
+                setOpaque(false);
+                labelNom.setForeground(list.getForeground());
+                labelType.setForeground(Color.GRAY);
+                labelGenre.setForeground(Color.GRAY);
+            }
+            labelNom.setOpaque(false);
+            labelType.setOpaque(false);
+            labelGenre.setOpaque(false);
+            return this;
+        }
+    }
+
     @Override
     public void actionPerformed(ActionEvent e)
     {
@@ -210,7 +425,7 @@ public class MainWindow extends JFrame implements ActionListener
             if (dlg.showDialog())
             {
                 mainController.addJeu(dlg.getNom(), dlg.getChemin(), dlg.getExtra());
-                refreshAllViews();
+                refreshAllLists();
             }
         }
         else if (e.getSource() == btnAjouterTravail)
@@ -219,7 +434,7 @@ public class MainWindow extends JFrame implements ActionListener
             if (dlg.showDialog())
             {
                 mainController.addTravail(dlg.getNom(), dlg.getChemin(), dlg.getExtra());
-                refreshAllViews();
+                refreshAllLists();
             }
         }
         else if (e.getSource() == btnAjouterMm)
@@ -228,13 +443,20 @@ public class MainWindow extends JFrame implements ActionListener
             if (dlg.showDialog())
             {
                 mainController.addMultimedia(dlg.getNom(), dlg.getChemin(), dlg.getExtra());
-                refreshAllViews();
+                refreshAllLists();
             }
         }
         else if (e.getSource() == btnParametres)
         {
             SettingsDialog dlg = new SettingsDialog(this, settingsController);
-            dlg.showDialog();
+            if (dlg.showDialog())
+            {
+                applyTheme(settingsController.getSettings().isDarkMode());
+                itemCellRenderer.setShowType(settingsController.getSettings().isShowType());
+                itemCellRenderer.setShowGenre(settingsController.getSettings().isShowGenre());
+                refreshAllLists();
+                refreshCellRenderer();
+            }
         }
         else if (e.getSource() == menuConnexion)
         {
@@ -243,7 +465,10 @@ public class MainWindow extends JFrame implements ActionListener
             {
                 mainController.restoreNextId();
                 refreshMenuState();
-                refreshAllViews();
+                refreshAllLists();
+                applyTheme(settingsController.getSettings().isDarkMode());
+                showType(settingsController.getSettings().isShowType());
+                showGenre(settingsController.getSettings().isShowGenre());
             }
         }
         else if (e.getSource() == menuInscription)
@@ -253,14 +478,15 @@ public class MainWindow extends JFrame implements ActionListener
             {
                 mainController.restoreNextId();
                 refreshMenuState();
-                refreshAllViews();
+                refreshAllLists();
+                showType(settingsController.getSettings().isShowType());
             }
         }
         else if (e.getSource() == menuDeconnexion)
         {
             authController.logout();
             refreshMenuState();
-            refreshAllViews();
+            refreshAllLists();
         }
         else if (e.getSource() == menuSauvegarde)
         {
@@ -282,10 +508,6 @@ public class MainWindow extends JFrame implements ActionListener
                     JOptionPane.showMessageDialog(this, "Type '" + name + "' ajouté avec succès !");
                 }
             }
-        }
-        else if (e.getSource() == menuModeSombre)
-        {
-            System.out.println("A implementer");
         }
         else if (e.getSource() == menuDate)
         {
