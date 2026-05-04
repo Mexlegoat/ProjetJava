@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDateTime;
 
 public class CreateItemDialog extends JDialog implements ActionListener {
 
@@ -21,6 +22,7 @@ public class CreateItemDialog extends JDialog implements ActionListener {
     private String  nom = "";
     private String  chemin = "";
     private String  extra = "";
+    private LocalDateTime dateCreation;
     private boolean confirmed = false;
 
     public CreateItemDialog(Frame owner, String categorie, String extraLabel) {
@@ -98,6 +100,7 @@ public class CreateItemDialog extends JDialog implements ActionListener {
     public String getNom()    { return nom; }
     public String getChemin() { return chemin; }
     public String getExtra()  { return extra; }
+    public LocalDateTime getDateCreation() {return dateCreation;}
 
     @Override
     public void actionPerformed(ActionEvent e)
@@ -134,6 +137,7 @@ public class CreateItemDialog extends JDialog implements ActionListener {
                     return;
                 }
             }
+            dateCreation = LocalDateTime.now();
 
             confirmed = true;
             dispose();

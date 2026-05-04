@@ -3,6 +3,7 @@ package controllers;
 import modeles.*;
 import services.UserService;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +16,7 @@ public class MainController
         this.userService = userService;
     }
 
-    public Jeu addJeu(String nom, String chemin, String genre)
+    public Jeu addJeu(String nom, String chemin, String genre, LocalDateTime dateCreation)
     {
         if (userService.getCurrentUser() == null) return null;
 
@@ -24,13 +25,14 @@ public class MainController
         j.setChemin(chemin);
         j.setGenre(genre);
         j.setIconPath(chemin);
+        j.setDateAjoute(dateCreation);
         j.initializeNewItem();
 
         addToCategory("Jeux", j);
         return j;
     }
 
-    public Travail addTravail(String nom, String chemin, String langage)
+    public Travail addTravail(String nom, String chemin, String langage, LocalDateTime dateCreation)
     {
         if (userService.getCurrentUser() == null) return null;
 
@@ -40,12 +42,12 @@ public class MainController
         t.setLangage(langage);
         t.setIconPath(chemin);
         t.initializeNewItem();
-
+        t.setDateAjoute(dateCreation);
         addToCategory("Travail", t);
         return t;
     }
 
-    public Multimedia addMultimedia(String nom, String chemin, String genre)
+    public Multimedia addMultimedia(String nom, String chemin, String genre, LocalDateTime dateCreation)
     {
         if (userService.getCurrentUser() == null) return null;
 
@@ -54,8 +56,8 @@ public class MainController
         m.setChemin(chemin);
         m.setGenre(genre);
         m.setIconPath(chemin);
+        m.setDateAjoute(dateCreation);
         m.initializeNewItem();
-
         addToCategory("Multimedia", m);
         return m;
     }
@@ -87,7 +89,14 @@ public class MainController
         }
         return new ArrayList<>();
     }
+    public void deleteItem(Item item) {
+        User user = userService.getCurrentUser();
+        if (user == null || item == null) return;
 
+        for (Categorie c : user.getCategories()) {
+            c.getItems().remove(item);
+        }
+    }
     public TypeClass addCustomType(String name)
     {
         User user = userService.getCurrentUser();
