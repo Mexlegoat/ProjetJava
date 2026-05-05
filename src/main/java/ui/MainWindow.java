@@ -1,9 +1,13 @@
     package ui;
+    import Application.Main;
     import controllers.AuthController;
     import controllers.MainController;
     import controllers.SettingsController;
     import modeles.*;
     import javax.swing.*;
+    import javax.swing.event.DocumentEvent;
+    import javax.swing.event.DocumentListener;
+    import javax.swing.filechooser.FileSystemView;
     import javax.swing.table.DefaultTableModel;
     import javax.swing.table.TableRowSorter;
     import java.awt.*;
@@ -11,6 +15,7 @@
     import java.awt.event.ActionListener;
     import java.awt.event.MouseAdapter;
     import java.awt.event.MouseEvent;
+    import java.io.File;
     import java.time.format.DateTimeFormatter;
     import java.util.ArrayList;
     import java.util.List;
@@ -120,6 +125,22 @@
             JPanel topPanel = new JPanel(new BorderLayout(8, 0));
             searchField = new JTextField();
             searchField.setToolTipText("Rechercher par nom...");
+            searchField.getDocument().addDocumentListener(new DocumentListener() {
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    setSearchField(settingsController.getSettings().getSearchType(), searchField.getText());
+                }
+
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    setSearchField(settingsController.getSettings().getSearchType(), searchField.getText());
+                }
+
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    setSearchField(settingsController.getSettings().getSearchType(), searchField.getText());
+                }
+            });
             JPanel searchPanel = new JPanel(new BorderLayout(4, 0));
             searchPanel.add(new JLabel("  Recherche : "), BorderLayout.WEST);
             searchPanel.add(searchField, BorderLayout.CENTER);
@@ -200,6 +221,23 @@
                             popup.show(list, e.getX(), e.getY());
                         }
                     }
+                    if (e.getClickCount() == 2 && settingsController.getSettings().isDoubleClickToExecute())
+                    {
+                        Item item = list.getSelectedValue();
+                        if (item != null)
+                        {
+                            if(item.getChemin() != null && !item.getChemin().isBlank())
+                            {
+                                item.launch();
+                            }
+                            else
+                            {
+                                JOptionPane.showMessageDialog(MainWindow.this,
+                                        "L'application '" + item.getNom() + "' n'est pas exécutable!"
+                                );
+                            }
+                        }
+                    }
                 }
             });
             col.add(new JScrollPane(list), BorderLayout.CENTER);
@@ -225,11 +263,15 @@
             parent.add(col);
             return list;
         }
+
+
         private void clearAllSelectionsExcept(JList<Item> currentList) {
             if (currentList != listJeu) listJeu.clearSelection();
             if (currentList != listTravail) listTravail.clearSelection();
             if (currentList != listMm) listMm.clearSelection();
         }
+
+
         private void refreshMenuState()
         {
             boolean loggedIn = authController.isLoggedIn();
@@ -289,6 +331,7 @@
             }
         }
 
+
         private void applyTheme(boolean darkMode)
         {
             try
@@ -342,6 +385,8 @@
                 ex.printStackTrace();
             }
         }
+
+
         private void setAssignTypeItem(Item item)
         {
 
@@ -379,6 +424,93 @@
                 JOptionPane.showMessageDialog(this, "Element supprimé.");
             }
         }
+
+
+        private void setSearchField(int searchField, String text)
+        {
+            if (text == null || text.isBlank()) {
+                refreshAllLists();
+                return;
+            }
+            List<Item> search = mainController.getAllItems();
+            List<Item> filtre = new ArrayList<>();
+            String lowerText = text.toLowerCase().trim();
+            for (Item i : search)
+            {
+                switch(searchField)
+                {
+                    case 0:
+                        if (i.getNom().toLowerCase().contains(lowerText))
+                            filtre.add(i);
+                        break;
+                    case 1:
+                        if (i.getCustomType() != null)
+                        {
+                            if (i.getCustomType().getNom().toLowerCase().contains(lowerText))
+                            {
+                                filtre.add(i);
+                            }
+                        }
+                        break;
+                }
+            }
+
+            updateTable(filtre);
+            updateLists(filtre);
+        }
+        private void updateLists(List<Item> filteredList)
+        {
+            DefaultListModel<Item> modelJeu = (DefaultListModel<Item>) listJeu.getModel();
+            DefaultListModel<Item> modelTravail = (DefaultListModel<Item>) listTravail.getModel();
+            DefaultListModel<Item> modelMm = (DefaultListModel<Item>) listMm.getModel();
+
+            modelJeu.clear();
+            modelTravail.clear();
+            modelMm.clear();
+
+            for (Item item : filteredList)
+            {
+                if (item instanceof Jeu)
+                {
+                    modelJeu.addElement(item);
+                }
+                else if (item instanceof Travail)
+                {
+                    modelTravail.addElement(item);
+                }
+                else if (item instanceof Multimedia)
+                {
+                    modelMm.addElement(item);
+                }
+            }
+        }
+        private void updateTable(List<Item> list)
+        {
+            tableModel.setRowCount(0);
+            for (Item item: list)
+            {
+                String date = "";
+                String type = "";
+
+                if (item.getDateAjoute() != null)
+                {
+                    date = item.getDateAjoute().format(currentFMT);
+                }
+                if (item.getCustomType() != null)
+                {
+                    type = item.getCustomType().getNom();
+                }
+                tableModel.addRow(new Object[]{
+                        item.getId(),
+                        item.getNom(),
+                        date,
+                        type,
+                        item.getChemin()
+                });
+            }
+        }
+
+
         private void showType(boolean show)
         {
             itemCellRenderer.setShowType(show);
@@ -448,6 +580,16 @@
                                                           Item item, int index, boolean isSelected, boolean cellHasFocus)
             {
                 labelNom.setText(item.getNom());
+                labelNom.setIcon(null);
+
+                if (item.getChemin() != null && !item.getChemin().isEmpty()) {
+                    File file = new File(item.getChemin());
+                    if (file.exists()) {
+                        Icon icon = FileSystemView.getFileSystemView().getSystemIcon(file);
+                        labelNom.setIcon(icon);
+                        labelNom.setIconTextGap(10);
+                    }
+                }
                 labelType.setVisible(showType);
                 if (showType)
                 {
@@ -508,6 +650,7 @@
                 return this;
             }
         }
+
 
         @Override
         public void actionPerformed(ActionEvent e)

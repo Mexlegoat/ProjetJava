@@ -30,9 +30,24 @@ public abstract class Item implements Serializable {
     public static void setNextId(int newId) { nextId = newId; }
 
     public void launch() {
-        if (chemin != null && !chemin.isBlank()) {
+        if (chemin != null && !chemin.isBlank())
+        {
+
             try {
-                Desktop.getDesktop().open(new File(chemin));
+                File file = new File(this.chemin);
+                if (!file.exists()) {
+                    System.err.println("Fichier introuvable : " + this.chemin);
+                    return;
+                }
+                // Windows?
+                String os = System.getProperty("os.name").toLowerCase();
+
+                if (os.contains("win")) {
+                    // commande /c pour lnk
+                    new ProcessBuilder("cmd", "/c", "start", "", this.chemin).start();
+                } else {
+                    Desktop.getDesktop().open(file);
+                }
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

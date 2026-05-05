@@ -15,4 +15,5 @@ public class TypeClass implements Serializable {
 
     @Override
     public String toString() { return nom; }
+
 }

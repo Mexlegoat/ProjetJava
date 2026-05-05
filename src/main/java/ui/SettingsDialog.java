@@ -22,8 +22,7 @@ public class SettingsDialog implements ActionListener {
     private JRadioButton radioDark, radioLight;
     private JCheckBox checkShowType, checkShowGenre;
     private JRadioButton radioExecOn, radioExecOff;
-    private JRadioButton radioNom, radioType, radioGenre;
-    private JTextField pathField;
+    private JRadioButton radioNom, radioType;
 
     public SettingsDialog(Frame owner, SettingsController settingsController) {
         this.settingsController = settingsController;
@@ -73,21 +72,11 @@ public class SettingsDialog implements ActionListener {
         panel.add(sectionLabel("Rechercher par"));
         radioNom = new JRadioButton("Nom");
         radioType = new JRadioButton("Type");
-        radioGenre = new JRadioButton("Genre/Langage");
         ButtonGroup searchGroup = new ButtonGroup();
         searchGroup.add(radioNom);
         searchGroup.add(radioType);
-        searchGroup.add(radioGenre);
         panel.add(radioNom);
         panel.add(radioType);
-        panel.add(radioGenre);
-
-        // Chemin par défaut
-        panel.add(Box.createVerticalStrut(10));
-        panel.add(sectionLabel("Chemin par défaut"));
-        pathField = new JTextField();
-        pathField.setMaximumSize(new Dimension(Integer.MAX_VALUE, 28));
-        panel.add(pathField);
 
         // Boutons
         panel.add(Box.createVerticalStrut(15));
@@ -116,10 +105,10 @@ public class SettingsDialog implements ActionListener {
         if (prefs.isDoubleClickToExecute()) radioExecOn.setSelected(true);
         else radioExecOff.setSelected(true);
 
-        switch (prefs.getSearchType()) {
-            case 1: radioType.setSelected(true); break;
-            case 2: radioGenre.setSelected(true); break;
-            default: radioNom.setSelected(true); break;
+        if (prefs.getSearchType() == 1) {
+            radioType.setSelected(true);
+        } else {
+            radioNom.setSelected(true);
         }
     }
 
@@ -145,8 +134,6 @@ public class SettingsDialog implements ActionListener {
             int searchType = 0;
             if (radioType.isSelected())
                 searchType = 1;
-            else if (radioGenre.isSelected())
-                searchType = 2;
 
             settingsController.saveSettings(
                     radioDark.isSelected(),

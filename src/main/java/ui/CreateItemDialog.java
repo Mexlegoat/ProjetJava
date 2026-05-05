@@ -1,6 +1,7 @@
 package ui;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,6 +17,7 @@ public class CreateItemDialog extends JDialog implements ActionListener {
     protected JCheckBox Lancer;
 
     private JPanel browseRow;
+    protected JButton browseBtn;
     private JLabel labelChemin;
 
     // Donnees recuperables apres fermeture
@@ -70,7 +72,9 @@ public class CreateItemDialog extends JDialog implements ActionListener {
         panel.add(pathField, gbc);
 
         browseRow = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
-        browseRow.add(new JButton("Parcourir..."));
+        browseBtn = new JButton("Parcourir..."); // On le stocke ici
+        browseBtn.addActionListener(this);       // On ajoute le listener
+        browseRow.add(browseBtn);
         gbc.gridx = 0; gbc.gridy = 4; gbc.gridwidth = 2;
         panel.add(browseRow, gbc);
 
@@ -141,6 +145,29 @@ public class CreateItemDialog extends JDialog implements ActionListener {
 
             confirmed = true;
             dispose();
+        }
+        else if (e.getSource() == browseBtn)
+        {
+            JFileChooser choix = new JFileChooser();
+            choix.setDialogTitle("Choisir un fichier ou un raccourci");
+
+            FileNameExtensionFilter filter =
+                    new FileNameExtensionFilter("Applications & Raccourcis", "exe", "lnk", "bat");
+            choix.setFileFilter(filter);
+            int result = choix.showOpenDialog(this);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                String selectedPath = choix.getSelectedFile().getAbsolutePath();
+                pathField.setText(selectedPath);
+
+                if (nomField.getText().trim().isEmpty()) {
+                    String fileName = choix.getSelectedFile().getName();
+                    if (fileName.contains(".")) {
+                        fileName = fileName.substring(0, fileName.lastIndexOf('.'));
+                    }
+                    nomField.setText(fileName);
+
+                }
+            }
         }
     }
 }
