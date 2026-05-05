@@ -70,10 +70,6 @@ public class RegisterDialog extends JDialog implements ActionListener {
         gbc.gridx = 0; gbc.gridy = 4; gbc.gridwidth = 2;
         panel.add(btnRow, gbc);
 
-        labelErreur = new JLabel("", SwingConstants.CENTER);
-        labelErreur.setForeground(Color.RED);
-        gbc.gridx = 0; gbc.gridy = 5; gbc.gridwidth = 2;
-        panel.add(labelErreur, gbc);
 
         setContentPane(panel);
     }
@@ -98,7 +94,7 @@ public class RegisterDialog extends JDialog implements ActionListener {
                 JOptionPane.showMessageDialog(this, "Vous êtes inscrit!");
                 dispose();
             } else {
-                labelErreur.setText(erreur);
+                JOptionPane.showMessageDialog(this, erreur);
             }
         }
     }

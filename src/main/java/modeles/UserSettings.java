@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserSettings implements Serializable {
-    private boolean isDarkMode = false;
+    private boolean isDarkMode = true;
     private boolean showType = false;
     private boolean showGenre = false;
     private boolean doubleClickToExecute = true;

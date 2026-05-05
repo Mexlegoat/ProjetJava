@@ -22,7 +22,7 @@ public class SettingsDialog implements ActionListener {
     private JRadioButton radioDark, radioLight;
     private JCheckBox checkShowType, checkShowGenre;
     private JRadioButton radioExecOn, radioExecOff;
-    private JRadioButton radioNom, radioType;
+    private JRadioButton radioNom, radioType, radioGenre;
 
     public SettingsDialog(Frame owner, SettingsController settingsController) {
         this.settingsController = settingsController;
@@ -72,11 +72,14 @@ public class SettingsDialog implements ActionListener {
         panel.add(sectionLabel("Rechercher par"));
         radioNom = new JRadioButton("Nom");
         radioType = new JRadioButton("Type");
+        radioGenre = new JRadioButton("Genre");
         ButtonGroup searchGroup = new ButtonGroup();
         searchGroup.add(radioNom);
         searchGroup.add(radioType);
+        searchGroup.add(radioGenre);
         panel.add(radioNom);
         panel.add(radioType);
+        panel.add(radioGenre);
 
         // Boutons
         panel.add(Box.createVerticalStrut(15));
@@ -107,9 +110,10 @@ public class SettingsDialog implements ActionListener {
 
         if (prefs.getSearchType() == 1) {
             radioType.setSelected(true);
-        } else {
+        } else if(prefs.getSearchType() == 0) {
             radioNom.setSelected(true);
-        }
+        } else
+            radioGenre.setSelected(true);
     }
 
     private JLabel sectionLabel(String text) {
@@ -134,6 +138,8 @@ public class SettingsDialog implements ActionListener {
             int searchType = 0;
             if (radioType.isSelected())
                 searchType = 1;
+            else if (radioGenre.isSelected())
+                searchType = 2;
 
             settingsController.saveSettings(
                     radioDark.isSelected(),

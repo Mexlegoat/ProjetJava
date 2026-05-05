@@ -1,5 +1,7 @@
     package ui;
     import Application.Main;
+    import com.formdev.flatlaf.FlatDarculaLaf;
+    import com.formdev.flatlaf.FlatLightLaf;
     import controllers.AuthController;
     import controllers.MainController;
     import controllers.SettingsController;
@@ -146,7 +148,7 @@
             searchPanel.add(searchField, BorderLayout.CENTER);
             topPanel.add(searchPanel, BorderLayout.CENTER);
             root.add(topPanel, BorderLayout.NORTH);
-            itemCellRenderer = new ItemCellRenderer(false, false, false);
+            itemCellRenderer = new ItemCellRenderer(false, false, true);
             JPanel center = new JPanel(new GridLayout(1, 3, 5, 0));
             listJeu = buildListColumn(center, "Jeux");
             listTravail = buildListColumn(center, "Travail");
@@ -338,39 +340,11 @@
             {
                 if (darkMode)
                 {
-                    UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-                    UIManager.put("control", new Color(45, 45, 45));
-                    UIManager.put("info", new Color(45, 45, 45));
-                    UIManager.put("nimbusBase", new Color(18, 30, 49));
-                    UIManager.put("nimbusBlueGrey", new Color(45, 45, 45));
-                    UIManager.put("nimbusLightBackground", new Color(70, 70, 70));
-                    UIManager.put("nimbusSelectedText", Color.WHITE);
-                    UIManager.put("nimbusDisabledText", Color.GRAY);
-                    UIManager.put("text", Color.WHITE);
-                    UIManager.put("Label.foreground", Color.WHITE);
-                    UIManager.put("CheckBox.foreground", Color.WHITE);
-                    UIManager.put("RadioButton.foreground", Color.WHITE);
-                    UIManager.put("TitledBorder.titleColor", Color.WHITE);
-                    UIManager.put("Menu.foreground", Color.WHITE);
-                    UIManager.put("Menu.background", new Color(45, 45, 45));
-                    UIManager.put("MenuItem.foreground", Color.WHITE);
-                    UIManager.put("MenuItem.background", new Color(45, 45, 45));
-                    UIManager.put("MenuBar.foreground", Color.WHITE);
-                    UIManager.put("MenuBar.background", new Color(45, 45, 45));
-                    UIManager.put("PopupMenu.background", new Color(45, 45, 45));
-                    UIManager.put("Menu[Enabled].textForeground", Color.WHITE);
-                    UIManager.put("MenuItem[Enabled].textForeground", Color.WHITE);
-                    UIManager.put("Menu[Selected].textForeground", Color.WHITE);
-                    UIManager.put("MenuItem[Selected].textForeground", Color.WHITE);
+                    FlatDarculaLaf.setup();
                 }
                 else
                 {
-                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                    UIManager.put("control", null);
-                    UIManager.put("text", Color.BLACK);
-                    UIManager.put("Label.foreground", Color.BLACK);
-                    UIManager.put("CheckBox.foreground", Color.BLACK);
-                    UIManager.put("RadioButton.foreground", Color.BLACK);
+                    FlatLightLaf.setup();
                 }
                 for (Window window : Window.getWindows())
                 {
@@ -450,6 +424,21 @@
                             {
                                 filtre.add(i);
                             }
+                        }
+                        break;
+                    case 2:
+                        String valeurATester = null;
+
+                        if (i instanceof Jeu) {
+                            valeurATester = ((Jeu) i).getGenre();
+                        } else if (i instanceof Multimedia) {
+                            valeurATester = ((Multimedia) i).getGenre();
+                        } else if (i instanceof Travail) {
+                            valeurATester = ((Travail) i).getLangage();
+                        }
+
+                        if (valeurATester != null && valeurATester.toLowerCase().contains(lowerText)) {
+                            filtre.add(i);
                         }
                         break;
                 }
