@@ -16,8 +16,8 @@ public class UserSettingsTest {
     }
 
     @Test
-    void darkMode_est_false_par_defaut() {
-        assertFalse(settings.isDarkMode());
+    void darkMode_est_true_par_defaut() {
+        assertTrue(settings.isDarkMode());
     }
 
     @Test

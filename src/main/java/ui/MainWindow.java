@@ -751,12 +751,13 @@
 
                 if (choix != JOptionPane.CLOSED_OPTION && choix != 3)
                 {
-                    String pattern = switch (choix)
+                    String pattern;
+                    switch (choix)
                     {
-                        case 0 -> "dd/MM/yyyy HH:mm";
-                        case 1 -> "yyyy-MM-dd HH:mm";
-                        case 2 -> "EEEE d MMMM yyyy HH:mm";
-                        default -> "dd/MM/yyyy HH:mm";
+                        case 0 -> pattern = "dd/MM/yyyy HH:mm";
+                        case 1 -> pattern = "yyyy-MM-dd HH:mm";
+                        case 2 -> pattern ="EEEE d MMMM yyyy HH:mm";
+                        default -> pattern = "dd/MM/yyyy HH:mm";
                     };
 
                     this.currentFMT = DateTimeFormatter.ofPattern(pattern);

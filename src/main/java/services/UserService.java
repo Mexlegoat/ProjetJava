@@ -33,7 +33,6 @@ public class UserService {
             return false;
         }
 
-        // Si auth OK → récupérer user (DAO ou créer)
         User user = userDAO.findByUsername(username).orElse(null);
 
         if (user == null) {

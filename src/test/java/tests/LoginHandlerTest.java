@@ -3,6 +3,7 @@ package tests;
 import authentication.HandlerLoginMemoire;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import utils.PasswordUtils;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -18,7 +19,7 @@ public class LoginHandlerTest {
 
     @Test
     void login_avec_credentials_corrects_retourne_true() {
-        assertTrue(handler.login("admin", "admin123"));
+        assertTrue(handler.login("admin", PasswordUtils.decrypt("admin123")));
     }
 
     @Test
@@ -49,6 +50,6 @@ public class LoginHandlerTest {
 
     @Test
     void login_user_par_defaut_retourne_true() {
-        assertTrue(handler.login("user", "user123"));
+        assertTrue(handler.login("user", PasswordUtils.decrypt("user123")));
     }
 }

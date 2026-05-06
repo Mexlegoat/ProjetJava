@@ -1,5 +1,7 @@
 package authentication;
 
+import utils.PasswordUtils;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,11 +11,11 @@ public class HandlerLoginMemoire extends HandlerLoginAbstrait {
 
     public HandlerLoginMemoire() {
         credentials.put("admin", "admin123");
-        credentials.put("user",  "user123");
+        credentials.put("user", "user123");
     }
 
     public void addCredential(String username, String password) {
-        credentials.put(username, password);
+        credentials.put(username, PasswordUtils.encrypt(password));
     }
 
     @Override
