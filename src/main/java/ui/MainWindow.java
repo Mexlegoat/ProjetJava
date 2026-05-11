@@ -18,6 +18,10 @@
     import java.awt.event.MouseAdapter;
     import java.awt.event.MouseEvent;
     import java.io.File;
+    import java.io.IOException;
+    import java.nio.file.Files;
+    import java.nio.file.Path;
+    import java.nio.file.Paths;
     import java.time.format.DateTimeFormatter;
     import java.util.ArrayList;
     import java.util.List;
@@ -531,6 +535,7 @@
             private boolean showGenre;
             private boolean darkMode;
 
+
             public ItemCellRenderer(boolean showType, boolean showGenre, boolean darkMode)
             {
                 this.showType = showType;
@@ -571,13 +576,87 @@
                 labelNom.setText(item.getNom());
                 labelNom.setIcon(null);
 
-                if (item.getChemin() != null && !item.getChemin().isEmpty()) {
-                    File file = new File(item.getChemin());
-                    if (file.exists()) {
-                        Icon icon = FileSystemView.getFileSystemView().getSystemIcon(file);
-                        labelNom.setIcon(icon);
-                        labelNom.setIconTextGap(10);
+
+                String os = System.getProperty("os.name").toLowerCase();
+                if (item.getChemin() != null && !item.getChemin().isEmpty())
+                {
+                    if(os.contains("win"))
+                    {
+                        File file = new File(item.getChemin());
+                        if (file.exists()) {
+                            Icon icon = FileSystemView.getFileSystemView().getSystemIcon(file);
+                            labelNom.setIcon(icon);
+                            labelNom.setIconTextGap(10);
+                        }
                     }
+                    else if (os.contains("nix") || os.contains("nux"))
+                    {
+                        Path File = Paths.get(item.getChemin());
+                        try
+                        {
+                            List<String> lines = Files.readAllLines(File);
+
+                            String iconName = null;
+
+                            for(String line : lines)
+                            {
+                                if(line.startsWith("Icon="))
+                                {
+                                    iconName = line.substring(5).trim();
+                                    break;
+                                }
+                            }
+
+                            if(iconName != null)
+                            {
+                                String iconPath = null;
+
+                                if(iconName.startsWith("/"))
+                                {
+                                    iconPath = iconName;
+                                }
+                                else
+                                {
+                                    String[] possiblePaths = {
+                                            "/usr/share/icons/hicolor/256x256/apps/" + iconName + ".png",
+                                            "/usr/share/icons/hicolor/128x128/apps/" + iconName + ".png",
+                                            "/usr/share/icons/hicolor/64x64/apps/" + iconName + ".png",
+                                            "/usr/share/icons/hicolor/480x480/apps/" + iconName + ".png",
+                                            "/usr/share/pixmaps/" + iconName + ".png",
+                                            "/usr/share/icons/hicolor/scalable/apps/" + iconName + ".svg"
+                                    };
+
+                                    for(String path : possiblePaths)
+                                    {
+                                        if(Files.exists(Paths.get(path)))
+                                        {
+                                            iconPath = path;
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                if(iconPath != null)
+                                {
+                                    ImageIcon icon = new ImageIcon(iconPath);
+
+                                    Image scaled = icon.getImage().getScaledInstance(
+                                            32,
+                                            32,
+                                            Image.SCALE_SMOOTH
+                                    );
+
+                                    labelNom.setIcon(new ImageIcon(scaled));
+                                    labelNom.setIconTextGap(10);
+                                }
+                            }
+                        }
+                        catch(IOException e)
+                        {
+                            e.printStackTrace();
+                        }
+                    }
+
                 }
                 labelType.setVisible(showType);
                 if (showType)

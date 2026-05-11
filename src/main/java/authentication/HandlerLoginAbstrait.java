@@ -11,7 +11,7 @@ public abstract class HandlerLoginAbstrait {
         String storedPass = credentials.get(username);
         if (storedPass == null) return false;
 
-        // C'est ici qu'on décrypte pour comparer !
+        // décrypter
         return PasswordUtils.decrypt(storedPass).equals(password);
     }
 

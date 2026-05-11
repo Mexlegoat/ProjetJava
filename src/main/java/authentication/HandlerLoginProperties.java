@@ -38,7 +38,6 @@ public class HandlerLoginProperties extends HandlerLoginAbstrait
                     String pass = properties.getProperty("password");
 
                     if (user != null && pass != null) {
-                        // ON GARDE LE MOT DE PASSE CRYPTÉ ICI
                         credentialsMap.put(user, pass);
                     }
                 } catch (IOException e) {
