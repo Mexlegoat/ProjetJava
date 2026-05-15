@@ -1,13 +1,11 @@
 package Application;
 
-import authentication.HandlerLoginAbstrait;
-import authentication.HandlerLoginProperties;
 import com.formdev.flatlaf.FlatDarculaLaf;
 import controllers.AuthController;
 import controllers.MainController;
 import controllers.SettingsController;
 import services.UserService;
-import ui.MainWindow;
+import view.GUI.MainWindow;
 
 import javax.swing.*;
 

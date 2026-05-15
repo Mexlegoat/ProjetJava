@@ -1,6 +1,6 @@
 package controllers;
 
-import modeles.*;
+import modeles.entity.*;
 import services.UserService;
 
 import java.time.LocalDateTime;

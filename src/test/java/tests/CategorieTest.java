@@ -1,8 +1,8 @@
 package tests;
 
-import modeles.Categorie;
-import modeles.Jeu;
-import modeles.Item;
+import modeles.entity.Categorie;
+import modeles.entity.Jeu;
+import modeles.entity.Item;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;

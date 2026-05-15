@@ -1,4 +1,4 @@
-package ui;
+package view.GUI;
 
 import java.awt.Frame;
 

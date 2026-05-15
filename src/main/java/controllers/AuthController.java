@@ -2,13 +2,15 @@ package controllers;
 
 import authentication.HandlerLoginAbstrait;
 import services.UserService;
+import view.console.DirectoryConsole;
 
 public class AuthController {
-
+    private DirectoryConsole cons;
     private final UserService userService;
 
     public AuthController(UserService userService) {
         this.userService = userService;
+        this.cons = new DirectoryConsole();
     }
 
     public String login(String username, String password) {
@@ -38,6 +40,7 @@ public class AuthController {
         if (!userService.register(username, password)) {
             return "Erreur lors de l'inscription.";
         }
+        cons.showUser(userService.getCurrentUser());
         return null; // succès
     }
 

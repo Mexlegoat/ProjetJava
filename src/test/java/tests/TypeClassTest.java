@@ -1,6 +1,6 @@
 package tests;
 
-import modeles.TypeClass;
+import modeles.entity.TypeClass;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 

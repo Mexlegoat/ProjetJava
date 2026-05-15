@@ -1,4 +1,4 @@
-package modeles;
+package modeles.entity;
 import java.io.Serializable;
 
 public class TypeClass implements Serializable {

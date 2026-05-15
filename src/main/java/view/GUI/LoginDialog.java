@@ -1,6 +1,7 @@
-package ui;
+package view.GUI;
 
 import controllers.AuthController;
+import view.console.DirectoryConsole;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,10 +11,12 @@ import java.awt.event.ActionListener;
 public class LoginDialog extends JDialog implements ActionListener {
 
     private final AuthController authController;
+    private DirectoryConsole cons;
     private JLabel labelErreur;
 
     private JTextField usernameField;
     private JPasswordField passwordField;
+
 
     private JButton Submit;
     private JButton Cancel;
@@ -22,6 +25,7 @@ public class LoginDialog extends JDialog implements ActionListener {
     public LoginDialog(Frame owner, AuthController authController) {
         super(owner, "Connexion", true);
         this.authController = authController;
+        this.cons = new DirectoryConsole();
         setSize(360, 220);
         setLocationRelativeTo(owner);
         setResizable(false);
@@ -90,9 +94,11 @@ public class LoginDialog extends JDialog implements ActionListener {
             if (erreur == null) {
                 confirmed = true;
                 JOptionPane.showMessageDialog(this, "Vous êtes connecté!");
+                cons.showMessage("Vous etes connecté!");
                 dispose();
             } else {
                 labelErreur.setText(erreur);
+                cons.showErrorMessage(erreur);
             }
         }
     }

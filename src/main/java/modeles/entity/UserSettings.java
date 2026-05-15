@@ -1,7 +1,5 @@
-package modeles;
+package modeles.entity;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 public class UserSettings implements Serializable {
     private boolean isDarkMode = true;

@@ -1,7 +1,7 @@
-package ui;
+package view.GUI;
 
 import controllers.SettingsController;
-import modeles.UserSettings;
+import modeles.entity.UserSettings;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,9 +1,9 @@
 package tests;
 
-import modeles.Categorie;
-import modeles.TypeClass;
-import modeles.User;
-import modeles.UserSettings;
+import modeles.entity.Categorie;
+import modeles.entity.TypeClass;
+import modeles.entity.User;
+import modeles.entity.UserSettings;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;

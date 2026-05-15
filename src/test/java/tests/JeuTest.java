@@ -1,6 +1,6 @@
 package tests;
 
-import modeles.Jeu;
+import modeles.entity.Jeu;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;

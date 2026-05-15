@@ -1,21 +1,19 @@
 package services;
 
-import DAO.UserDAO;
-import authentication.HandlerLoginAbstrait;
+import modeles.dao.UserDAO;
 import authentication.HandlerLoginProperties;
-import modeles.User;
+import modeles.entity.User;
 import patterns.UserSession;
 import utils.PasswordUtils;
 
 import java.io.*;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 
 public class UserService {
 
     private final UserDAO userDAO = new UserDAO();
-    private static final String PROPERTIES_FOLDER = "users";
+    private static final String PROPERTIES_FOLDER = "resources";
     private final HandlerLoginProperties handler;
 
     public UserService() {
@@ -102,7 +100,7 @@ public class UserService {
         File dir = new File(PROPERTIES_FOLDER);
         if (!dir.exists()) {
             boolean created = dir.mkdirs();
-            System.out.println("Création du dossier 'users' : " + created);
+            System.out.println("Création du dossier 'resources' : " + created);
         }
 
         File userFile = new File(dir, user.getUsername() + ".properties");

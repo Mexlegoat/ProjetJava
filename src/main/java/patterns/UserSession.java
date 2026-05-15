@@ -1,6 +1,6 @@
 package patterns;
 
-import modeles.User;
+import modeles.entity.User;
 
 
 public class UserSession

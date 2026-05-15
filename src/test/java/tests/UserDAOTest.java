@@ -1,7 +1,7 @@
 package tests;
 
-import DAO.UserDAO;
-import modeles.User;
+import modeles.dao.UserDAO;
+import modeles.entity.User;
 import org.junit.jupiter.api.*;
 
 import java.io.File;

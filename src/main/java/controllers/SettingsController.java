@@ -1,6 +1,6 @@
 package controllers;
 
-import modeles.UserSettings;
+import modeles.entity.UserSettings;
 import services.UserService;
 
 import java.util.ArrayList;

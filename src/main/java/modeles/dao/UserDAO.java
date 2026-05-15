@@ -1,13 +1,14 @@
-package DAO;
+package modeles.dao;
 
-import modeles.User;
+import modeles.entity.User;
+import modeles.interfaces.UserDAL;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class UserDAO {
+public class UserDAO implements UserDAL {
 
     private static final String FILE_PATH = "users.dat";
 
@@ -15,7 +16,8 @@ public class UserDAO {
         return readData();
     }
 
-    public Optional<User> findByUsername(String username) {
+    @Override
+    public Optional<User> findById(String username) {
         List<User> users = findAll();
         for (User u : users) {
             if (u.getUsername().equals(username)) {
@@ -25,8 +27,12 @@ public class UserDAO {
         return Optional.empty();
     }
 
-    public boolean existsByUsername(String username) {
-        return findByUsername(username).isPresent();
+    
+    public Optional<User> findByUsername(String username) {
+        return findById(username);
+    }
+public boolean existsByUsername(String username) {
+        return findById(username).isPresent();
     }
 
     public boolean insert(User user) {

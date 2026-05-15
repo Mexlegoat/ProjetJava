@@ -22,7 +22,7 @@ public class HandlerLoginProperties extends HandlerLoginAbstrait
     @Override
     public Map<String, String> loadCredentials() {
         Map<String, String> credentialsMap = new HashMap<>();
-        File folder = new File("users");
+        File folder = new File("resources");
 
         if (!folder.exists() || !folder.isDirectory()) {
             return credentialsMap;

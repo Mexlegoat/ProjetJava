@@ -1,11 +1,12 @@
-    package ui;
-    import Application.Main;
+    package view.GUI;
     import com.formdev.flatlaf.FlatDarculaLaf;
     import com.formdev.flatlaf.FlatLightLaf;
     import controllers.AuthController;
     import controllers.MainController;
     import controllers.SettingsController;
-    import modeles.*;
+    import modeles.entity.*;
+    import view.console.DirectoryConsole;
+
     import javax.swing.*;
     import javax.swing.event.DocumentEvent;
     import javax.swing.event.DocumentListener;
@@ -32,6 +33,8 @@
         private final MainController mainController;
         private final AuthController authController;
         private final SettingsController settingsController;
+
+        private DirectoryConsole cons;
 
         private JMenu menuAffichage;
         private JMenu menuAjouter;
@@ -72,6 +75,7 @@
             this.mainController = mainController;
             this.authController = authController;
             this.settingsController = settingsController;
+            this.cons = new DirectoryConsole();
             setTitle("StartApp");
             setSize(950, 650);
             setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -728,8 +732,10 @@
                 CreateGameDialog dlg = new CreateGameDialog(this);
                 if (dlg.showDialog())
                 {
-                    mainController.addJeu(dlg.getNom(), dlg.getChemin(), dlg.getExtra(), dlg.getDateCreation());
+                    Jeu j = mainController.addJeu(dlg.getNom(), dlg.getChemin(), dlg.getExtra(), dlg.getDateCreation());
+
                     refreshAllLists();
+                    cons.showCreated(j);
                 }
             }
             else if (e.getSource() == btnAjouterTravail)
@@ -737,8 +743,10 @@
                 CreateTravailDialog dlg = new CreateTravailDialog(this);
                 if (dlg.showDialog())
                 {
-                    mainController.addTravail(dlg.getNom(), dlg.getChemin(), dlg.getExtra(), dlg.getDateCreation());
+                    Travail t = mainController.addTravail(dlg.getNom(), dlg.getChemin(), dlg.getExtra(), dlg.getDateCreation());
                     refreshAllLists();
+
+                    cons.showCreated(t);
                 }
             }
             else if (e.getSource() == btnAjouterMm)
@@ -746,8 +754,9 @@
                 CreateMultimediaDialog dlg = new CreateMultimediaDialog(this);
                 if (dlg.showDialog())
                 {
-                    mainController.addMultimedia(dlg.getNom(), dlg.getChemin(), dlg.getExtra(), dlg.getDateCreation());
+                    Multimedia m = mainController.addMultimedia(dlg.getNom(), dlg.getChemin(), dlg.getExtra(), dlg.getDateCreation());
                     refreshAllLists();
+                    cons.showCreated(m);
                 }
             }
             else if (e.getSource() == btnParametres)

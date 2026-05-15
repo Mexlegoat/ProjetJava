@@ -1,4 +1,6 @@
-package ui;
+package view.GUI;
+
+import view.console.DirectoryConsole;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -9,6 +11,7 @@ import java.time.LocalDateTime;
 
 public class CreateItemDialog extends JDialog implements ActionListener {
 
+    protected DirectoryConsole cons;
     protected JTextField nomField;
     protected JTextField pathField;
     protected JTextField extraField;

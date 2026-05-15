@@ -1,6 +1,6 @@
 package tests;
 
-import modeles.UserSettings;
+import modeles.entity.UserSettings;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
